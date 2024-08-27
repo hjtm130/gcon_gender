@@ -5,4 +5,4 @@ from flask import Flask
 app = Flask(__name__)
 
 # アプリケーションの設定やルートのインポート
-from . import routes
+import testapp.routes as routes

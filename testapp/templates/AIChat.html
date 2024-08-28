@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seikyouiku Chatbot</title>
+</head>
+<body>
+    <div>
+        <div>
+            <div>
+                <h1>Seikyouiku Chatbot</h1>
+                <!--送信ボックス-->
+                <p>ききたいこと：</p>
+                <form id="create-text-form">
+                    <div>
+                        <textarea id="message" name="message" rows="3" required></textarea>
+                    </div>
+                    <button type="submit">送信</button>
+                </form>
+                <div id="loading" style="display:none;">Now Loading...</div>
+                <pre id="result"></pre>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('create-text-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                var loading = document.getElementById('loading');
+                var result = document.getElementById('result');
+                var message = document.getElementById('message').value;
+
+                loading.style.display = 'block';
+                result.textContent = '';
+
+                fetch('/create_text', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'message=' + encodeURIComponent(message)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    result.innerHTML = '回答: ' + data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loading.style.display = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -24,3 +24,7 @@ def junior_high_school():
 @app.route('/HighSchool')
 def high_school():
     return render_template('HighSchool.html')
+
+@app.route('/header')
+def header():
+    return render_template('header.html')

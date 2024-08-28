@@ -7,15 +7,12 @@
     <title>ホーム</title>
 </head>
 <body>
+    <!--ヘッダーを読み込むためのJacaScript-->
+    <script src="{{ url_for('static', filename='routes.js') }}"></script>
+
     <h1>home</h1>
     <p>ここにこのサービスについての説明が入ります。</p>
-    <div>
-        <a href="/AIChat">AIChat</a><br>
-        相談はこちらへ<br>
-    </div>
-    <div>
-        <a href="/Tips">Tips</a><br>
-        分からないことを調べてみよう<br>
-    </div>
+    <a href="/AIChat">AIChat</a>
+    <a href="/Tips">Tips</a>
 </body>
 </html>

@@ -1,11 +1,12 @@
 <nav>
     <div class="container">
-        <a href="#" class="logo">MySite</a>
+        <a href="/" class="logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+        </a>
         <ul class="menu">
-            <li><a href="#home">ホーム</a></li>
-            <li><a href="#about">私たちについて</a></li>
-            <li><a href="#services">サービス</a></li>
-            <li><a href="#contact">お問い合わせ</a></li>
+            <li><a href="/">ホーム</a></li>
+            <li><a href="/AIChat">AIChat</a></li>
+            <li><a href="/Tips">Tips</a></li>
         </ul>
     </div>
 </nav>

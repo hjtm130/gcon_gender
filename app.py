@@ -1,34 +1,21 @@
-from flask import Flask, render_template
+from flask import Flask
+from models import db, migrate, User
+from flask import render_template, request, redirect, url_for, session
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_pyfile('config.py', silent=True)
 
-@app.route('/')
-def index():
-    return render_template('Home.html')
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-@app.route('/AIChat')
-def ai_chat():
-    return render_template('AIChat.html')
-
-@app.route('/CounselorChat')
-def counselor_chat():
-    return render_template('CounselorChat.html')
-
-@app.route('/Tips')
-def tips():
-    return render_template('Tips.html')
-
-@app.route('/JuniorHighSchool')
-def junior_high_school():
-    return render_template('JuniorHighSchool.html')
-
-@app.route('/HighSchool')
-def high_school():
-    return render_template('HighSchool.html')
-
-@app.route('/header')
-def header():
-    return render_template('header.html')
+    # Blueprintsの登録
+    from routes import main_bp
+    app.register_blueprint(main_bp)
+    return app
 
 if __name__ == '__main__':
+    app = create_app()
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

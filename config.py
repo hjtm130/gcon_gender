@@ -1,0 +1,5 @@
+import os
+
+SQLALCHEMY_DATABASE_URI = 'sqlite:///gcon_gender.db'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+SECRET_KEY = '07b655ff6367c88aa4fea6a63c5c90fcadd98af037968971'

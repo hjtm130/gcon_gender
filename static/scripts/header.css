@@ -39,10 +39,11 @@ nav ul li a{
 
 nav li a:hover{
     color: #c72dbd;
-    text-decoration: underline;
+    border-bottom: 3px solid #c72dbd;
 
 }
 
 nav li a.current{
-    color: red;
+    color: #56d2ff;
+    border-bottom: 3px solid #56d2ff;
 }

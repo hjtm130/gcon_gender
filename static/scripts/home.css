@@ -16,6 +16,10 @@
     
 }
 
+ul{
+    list-style-type:none;
+}
+
 .selection{
     display: inline-block;
     border:solid 3px #e5ffe5;

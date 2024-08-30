@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
 
+.contents{
+    text-align: center;
+}
+
 .explanation{
     border:solid 3px #e5ffe5;
     border-radius: 20px;
@@ -13,11 +17,9 @@
 
 .selection{
     display: inline-block;
-    text-align: center;
     border:solid 3px #e5ffe5;
     border-radius: 20px;
     padding: 20px;
-    text-align: center;
     margin: 10px;
     font-family: "Arial black";
     color: #300;

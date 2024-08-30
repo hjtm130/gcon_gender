@@ -4,41 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="../static/scripts/home.css">
-    <link rel="stylesheet" href="../static/scripts/header.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../scripts/home.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='../scripts/header.css')}}">
     <title>ホーム</title>
 </head>
 <body>
-      <!-- ヘッダーメニュー -->
-      <nav>
-        <div class="wrapper">
-            <ul>
-                <li class="item"><a href="Home">Home</a></li>
-                <li class="item"><a href="/AIchat">AIchat</a></li>
-                <li class="item"><a href="/Tips">Tips</a></li>
-            </ul>
-        </div>
-    </nav>
-        <!-- ここまでヘッダーメニュー -->
+    <div class="contents">
+        <!-- ヘッダーメニュー 
+        <nav>
+            <div class="wrapper">
+                <ul>
+                    <li class="item"><a href="Home">Home</a></li>
+                    <li class="item"><a href="/AIchat">AIchat</a></li>
+                    <li class="item"><a href="/Tips">Tips</a></li>
+                </ul>
+            </div>
+        </nav>
+            ここまでヘッダーメニュー -->
 
-    <script src="{{ url_for('static', filename='js/routes.js') }}"></script>
-    <!--<iframe src="header.html" width="100%" height="100px"></iframe>-->
-    <h1>home</h1>
-    <div class="explanation">
-        <p>
-            (サービス名)は、中高生を対象とした性教育サイトです。私たちは、以下のSDGsターゲットを達成するために本サービスを開始しました。
-            <ul>
-                <li>5.1「あらゆる場所におけるすべての女性及び女児に対するあらゆる形態の差別を撤廃する」</li>
-                <li>3.7「2030年までに、家族計画、情報・教育及び性と生殖に関する健康の国家戦略・計画への組み入れを含む、性と生殖に関する保険サービスをすべての人々が利用できるようにする」</li>
-            </ul>
-            (サービス名)により、性の話題がタブー視されず、性被害が減ることを願っております。
-        </p>
-    </div>
-    <div class="selection">
-        <a href="/AIChat">AIChat</a>
-    </div>
-    <div class="selection">
-        <a href="/Tips">Tips</a>
+        <script src="{{ url_for('static', filename='js/routes.js') }}"></script>
+        {% include "header.html" %}
+        <h1>home</h1>
+        <div class="explanation">
+            <p>
+                (サービス名)は、中高生を対象とした性教育サイトです。私たちは、以下のSDGsターゲットを達成するために本サービスを開始しました。
+                <ul>
+                    <li>5.1「あらゆる場所におけるすべての女性及び女児に対するあらゆる形態の差別を撤廃する」</li>
+                    <li>3.7「2030年までに、家族計画、情報・教育及び性と生殖に関する健康の国家戦略・計画への組み入れを含む、性と生殖に関する保険サービスをすべての人々が利用できるようにする」</li>
+                </ul>
+                (サービス名)により、性の話題がタブー視されず、性被害が減ることを願っております。
+            </p>
+        </div>
+        <div class="selection">
+            <a href="/AIChat">AIChat</a>
+        </div>
+        <div class="selection">
+            <a href="/Tips">Tips</a>
+        </div>
     </div>
 </body>
 </html>

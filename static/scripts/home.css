@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
 
 .contents{
+    width: 100%;
     text-align: center;
     color: #300;
+
 }
 
 .explanation{
@@ -23,8 +25,31 @@ ul{
 .selection{
     display: inline-block;
     border:solid 3px #e5ffe5;
-    border-radius: 20px;
-    padding: 20px;
-    margin: 10px;
+    background-color: #e5ffe5;
+    border-bottom: 0.1875em solid #91a591;/*影色*/
+    border-radius: 20px; /*丸み*/
+    width: 100px;
+    height: 90px;
     font-family: "Arial black";
+    position: relative;
+    margin: 0 auto;
+    text-align: center;/* ←文字を左右に中央揃え */
+    line-height: 80px;
+	cursor: pointer;
+	transition: all 0.3s ease 0s;
+}
+
+.selection a{
+    color: rgb(20, 146, 157);
+    text-decoration: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+.selection:hover{
+    border-bottom-color: transparent;
+	transform: translateY(0.1875em);
 }

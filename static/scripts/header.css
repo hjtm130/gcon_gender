@@ -40,7 +40,6 @@ nav ul li a{
 nav li a:hover{
     color: #c72dbd;
     border-bottom: 3px solid #c72dbd;
-
 }
 
 nav li a.current{

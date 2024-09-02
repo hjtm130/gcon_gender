@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User
+from models import db, User, ChatLog # データベースのインポート
 import openai
 from markupsafe import escape
 import os
@@ -47,26 +47,62 @@ def home():
 openai_api_key = os.environ.get("OPENAI_API_KEY")
 openai.api_key = openai_api_key
 
-@main_bp.route('/AIChat')
-def ai_chat():
+@main_bp.route('/AIChat', methods=['GET'])
+def aichat_page():
     return render_template('AIChat.html')
 
 @main_bp.route('/create_text', methods=['POST'])
 def create_text():
     message = request.form['message']
+    
+    # 過去のチャットログを取得する
+    past_logs = ChatLog.query.order_by(ChatLog.created_at.desc()).all()
+    
+    # ログからメッセージをフォーマットする
+    messages = []
+    for log in reversed(past_logs):  # 最新のログが先に来るように逆順で処理
+        messages.append({"role": "user", "content": log.user_message})
+        messages.append({"role": "assistant", "content": log.ai_response})
+    
+    # 現在のメッセージを追加
+    messages.append({"role": "user", "content": message})
+    
+    # OpenAI APIを使って応答を生成
     res = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[
-            {
-                "role": "user",
-                "content": f"以下の質問に答えてあげてください：{message}",
-            }
-        ]
+        messages=messages
     )
     
     generated_text = res['choices'][0]['message']['content']
     generated_text = escape(generated_text)
+    
+    # チャットログをデータベースに保存
+    chat_log = ChatLog(user_message=message, ai_response=generated_text)
+    db.session.add(chat_log)
+    db.session.commit()
+    
     return jsonify({'message': generated_text})
+
+
+@main_bp.route('/chat_logs', methods=['GET'])
+def chat_logs():
+    logs = ChatLog.query.order_by(ChatLog.created_at.desc()).all()
+    return render_template('chat_logs.html', logs=logs)
+
+@main_bp.route('/get_chat_log', methods=['GET'])
+def get_chat_log():
+    chat_logs = ChatLog.query.order_by(ChatLog.id.asc()).all()
+    chat_log_list = [{'user_message': chat.user_message, 'ai_response': chat.ai_response} for chat in chat_logs]
+    return jsonify(chat_log_list)
+
+@main_bp.route('/delete_logs', methods=['POST'])
+def delete_logs():
+    # チャットログを全て削除
+    ChatLog.query.delete()
+    db.session.commit()
+    
+    # JSONレスポンスを返す
+    return jsonify({'message': 'ログが削除されました！'})
 
 #-------------以上---------------
 

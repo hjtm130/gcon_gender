@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User
+import openai
+from markupsafe import escape
+import os
 
 # Blueprintの作成
 main_bp = Blueprint('main', __name__)
@@ -38,9 +41,34 @@ def login():
 def home():
     return render_template('Home.html')
 
+# --------AIchatに関する処理--------
+
+# 環境変数からAPIキーを取得
+openai_api_key = os.environ.get("OPENAI_API_KEY")
+openai.api_key = openai_api_key
+
 @main_bp.route('/AIChat')
 def ai_chat():
     return render_template('AIChat.html')
+
+@main_bp.route('/create_text', methods=['POST'])
+def create_text():
+    message = request.form['message']
+    res = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "user",
+                "content": f"以下の質問に答えてあげてください：{message}",
+            }
+        ]
+    )
+    
+    generated_text = res['choices'][0]['message']['content']
+    generated_text = escape(generated_text)
+    return jsonify({'message': generated_text})
+
+#-------------以上---------------
 
 @main_bp.route('/CounselorChat')
 def counselor_chat():

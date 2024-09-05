@@ -1,0 +1,66 @@
+<!-- admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Admin Dashboard</h1>
+
+    <h2>Add Tag</h2>
+    <form method="POST" action="{{ url_for('main.admin_dashboard') }}">
+        <label for="tag_name">Tag Name:</label>
+        <input type="text" id="tag_name" name="tag_name" required>
+        <button type="submit">Add Tag</button>
+    </form>
+
+    <h2>Tags</h2>
+    <ul>
+        {% for tag in tags %}
+        <li>
+            {{ tag.name }}
+            <form method="POST" action="{{ url_for('main.delete_tag', tag_id=tag.id) }}" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add Tip</h2>
+    <form method="POST" action="{{ url_for('main.admin_dashboard') }}">
+        <label for="tip_title">Title:</label>
+        <input type="text" id="tip_title" name="tip_title" required>
+        <br>
+        <label for="tip_content">Content:</label>
+        <textarea id="tip_content" name="tip_content" required></textarea>
+        <br>
+        <label for="tip_link">Link:</label>
+        <input type="text" id="tip_link" name="tip_link">
+        <br>
+        <label for="tip_tags">Tags:</label>
+        <select id="tip_tags" name="tip_tags" multiple>
+            {% for tag in tags %}
+            <option value="{{ tag.id }}">{{ tag.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <button type="submit">Add Tip</button>
+    </form>
+
+    <h2>Tips</h2>
+    <ul>
+        {% for tip in tips %}
+        <li>
+            <a href="{{ tip.link }}">{{ tip.title }}</a>: {{ tip.content }}
+            <form method="POST" action="{{ url_for('main.delete_tip', tip_id=tip.id) }}" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('main.home') }}">ホームに戻る</a>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Tips</title>
+</head>
+<body>
+    <h1>Tips一覧</h1>
+    <ul>
+        {% for tip in tips %}
+        <a href="{{ tip.link }}"><li>{{ tip.title }}: {{ tip.content }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('main.tags') }}">タグ一覧</a>
+</body>
+</html>

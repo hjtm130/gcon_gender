@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User, ChatLog # データベースのインポート
+from models import db, User, ChatLog, Tip, Tag, TipTag # データベースのインポート
 import openai
 from markupsafe import escape
 import os
@@ -125,3 +125,61 @@ def high_school():
 @main_bp.route('/header')
 def header():
     return render_template('header.html')
+
+@main_bp.route('/tags')
+def tags():
+    tags = Tag.query.all()
+    return render_template('Tips/tags.html', tags=tags)
+
+@main_bp.route('/tag/<tag_id>')
+def tips_by_tag(tag_id):
+    tag = Tag.query.get(tag_id)
+    tips = tag.tips
+    return render_template('Tips/tips_by_tag.html', tag=tag, tips=tips)
+
+@main_bp.route('/admin_dashboard', methods=['GET', 'POST'])
+def admin_dashboard():
+    if request.method == 'POST':
+        # タグの追加
+        if 'tag_name' in request.form:
+            tag_name = request.form['tag_name']
+            if tag_name:
+                existing_tag = Tag.query.filter_by(name=tag_name).first()
+                if not existing_tag:
+                    tag = Tag(name=tag_name)
+                    db.session.add(tag)
+                    db.session.commit()
+        
+        # ティップの追加
+        elif 'tip_title' in request.form and 'tip_content' in request.form:
+            title = request.form['tip_title']
+            content = request.form['tip_content']
+            link = request.form.get('tip_link', '')
+            tag_ids = request.form.getlist('tip_tags')
+
+            if title and content:
+                tip = Tip(title=title, content=content, link=link)
+                for tag_id in tag_ids:
+                    tag = Tag.query.get(int(tag_id))
+                    if tag:
+                        tip.tags.append(tag)
+                db.session.add(tip)
+                db.session.commit()
+    
+    tags = Tag.query.all()
+    tips = Tip.query.all()
+    return render_template('Admin/admin_dashboard.html', tags=tags, tips=tips)
+
+@main_bp.route('/delete_tag/<int:tag_id>', methods=['POST'])
+def delete_tag(tag_id):
+    tag = Tag.query.get_or_404(tag_id)
+    db.session.delete(tag)
+    db.session.commit()
+    return redirect(url_for('main.admin_dashboard'))
+
+@main_bp.route('/delete_tip/<int:tip_id>', methods=['POST'])
+def delete_tip(tip_id):
+    tip = Tip.query.get_or_404(tip_id)
+    db.session.delete(tip)
+    db.session.commit()
+    return redirect(url_for('main.admin_dashboard'))

@@ -1,0 +1,39 @@
+/*ヘッダーはheader.htmlで読み込みたいので別でcss作りたい*/
+/******* ヘッダーのスタイル ********/
+nav {
+    background: #fff;
+    width: 100%;
+}
+
+/* ヘッダーを固定させる */
+nav.fixed {
+    position: fixed;/*fixedで固定*/
+    right: 0;
+    top: 0;
+}
+
+.wrapper {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+nav ul {
+    justify-content: flex-end;
+    display: flex;
+    list-style: none;
+}
+
+.item {
+    margin: 0 2em;
+    padding: 17px 0;
+    font-weight:bold;
+}
+
+.item a {
+    color: #48D1CC;
+    text-decoration: none;
+}
+
+.item a:hover{
+    color: #0000FF;
+}

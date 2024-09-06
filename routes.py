@@ -13,9 +13,10 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        status = request.form['status']
         user = User.query.filter_by(username=username).first()
         if user is None:
-            new_user = User(username=username)
+            new_user = User(username=username, status=status)
             new_user.set_password(password)
             db.session.add(new_user)
             db.session.commit()
@@ -30,12 +31,22 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        user = User.query.filter_by(username=username).first()
+        status = request.form['status']
+        user = User.query.filter_by(username=username, status=status).first()
         if user and user.check_password(password):
-             return redirect(url_for('main.home'))
+            if user:
+                session['username'] = user.username
+                session['status'] = user.status
+                if user.status == 'admin':
+                    return redirect(url_for('main.admin_dashboard'))
+                elif user.status == 'user':
+                    return redirect(url_for('main.home'))
+                elif user.status == 'counselor':
+                    return redirect(url_for('main.counselor'))
+            else:
+                return 'Invalid username, password, or status', 401
         else:
-            # ログイン失敗の場合の処理
-            return "Invalid username or password!"
+                return 'Invalid username, password, or status', 401
     return render_template('Login.html')
 
 @main_bp.route('/')
@@ -143,6 +154,14 @@ def tips_by_tag(tag_id):
     tips = tag.tips
     return render_template('Tips/tips_by_tag.html', tag=tag, tips=tips)
 
+#カウンセラーチャット関係の処理
+
+# counselorログイン後
+@main_bp.route('/counselor_dashboard')
+def counselor_dashboard():
+    return render_template('counselor_dashboard.html')
+
+# adminログイン後
 @main_bp.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
     if request.method == 'POST':
@@ -189,5 +208,3 @@ def delete_tip(tip_id):
     db.session.delete(tip)
     db.session.commit()
     return redirect(url_for('main.admin_dashboard'))
-
-#カウンセラーチャット関係の処理

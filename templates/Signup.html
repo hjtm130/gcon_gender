@@ -14,6 +14,12 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
         <br>
+        <label for="status">Status:</label> 
+        <select name="status">
+            <option value="admin" id="admin" name="admin">Admin</option>
+            <option value="user" id="user" name="user">User</option>
+            <option value="counselor" id="counselor" name="counselor">Counselor</option>
+        </select><br>
         <button type="submit">Signup</button>
     </form>
     <p>Already have an account? <a href="{{ url_for('main.login') }}">Login</a></p>

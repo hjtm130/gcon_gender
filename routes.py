@@ -49,9 +49,19 @@ def login():
                 return 'Invalid username, password, or status', 401
     return render_template('Login.html')
 
+@main_bp.route('/logout')
+def logout():
+    session.pop('username', None)
+    session.pop('status', None)
+    return redirect(url_for('main.login'))
+
 @main_bp.route('/')
 def home():
     return render_template('Home.html')
+
+@main_bp.route('/home')
+def user_dashboard():
+    return render_template('User_dashboard.html')
 
 # --------AIchatに関する処理--------
 
@@ -141,7 +151,10 @@ def high_school():
 
 @main_bp.route('/header')
 def header():
-    return render_template('header.html')
+    return render_template('before_header.html')
+@main_bp.route('/header_after')
+def header_after():
+    return render_template('after_header.html')
 
 @main_bp.route('/tags')
 def tags():

@@ -42,7 +42,7 @@ def login():
                 elif user.status == 'user':
                     return redirect(url_for('main.home'))
                 elif user.status == 'counselor':
-                    return redirect(url_for('main.counselor'))
+                    return redirect(url_for('main.counselor_dashboard'))
             else:
                 return 'Invalid username, password, or status', 401
         else:
@@ -161,7 +161,7 @@ def tags():
     tags = Tag.query.all()
     return render_template('Tips/tags.html', tags=tags)
 
-@main_bp.route('/tag/<tag_id>')
+@main_bp.route('/<tag_id>')
 def tips_by_tag(tag_id):
     tag = Tag.query.get(tag_id)
     tips = tag.tips
@@ -172,11 +172,12 @@ def tips_by_tag(tag_id):
 # counselorログイン後
 @main_bp.route('/counselor_dashboard')
 def counselor_dashboard():
-    return render_template('counselor_dashboard.html')
+    return render_template('Counselor_dashboard.html')
 
 # adminログイン後
 @main_bp.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
+    status = None
     if request.method == 'POST':
         # タグの追加
         if 'tag_name' in request.form:
@@ -203,10 +204,14 @@ def admin_dashboard():
                         tip.tags.append(tag)
                 db.session.add(tip)
                 db.session.commit()
+
+        elif 'status' in request.form:
+            status = request.form.get('status')
     
     tags = Tag.query.all()
     tips = Tip.query.all()
-    return render_template('Admin/admin_dashboard.html', tags=tags, tips=tips)
+    users = User.query.filter_by(status=status).all() if status else User.query.all()
+    return render_template('Admin/admin_dashboard.html', tags=tags, tips=tips, users=users)
 
 @main_bp.route('/delete_tag/<int:tag_id>', methods=['POST'])
 def delete_tag(tag_id):

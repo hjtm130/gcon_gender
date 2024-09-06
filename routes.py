@@ -3,6 +3,7 @@ from models import db, User, ChatLog, Tip, Tag, TipTag # データベースの�
 import openai
 from markupsafe import escape
 import os
+import sqlite3
 
 # Blueprintの作成
 main_bp = Blueprint('main', __name__)
@@ -108,6 +109,11 @@ def delete_logs():
 
 @main_bp.route('/CounselorChat')
 def counselor_chat():
+    conn = sqlite3.connect('chattest.db')
+    cursor = conn.cursor()
+    cursor.execute("select id, name from user")
+    user_info = cursor.fetchall()
+    conn.close()
     return render_template('CounselorChat.html')
 
 @main_bp.route('/Tips')
@@ -183,3 +189,5 @@ def delete_tip(tip_id):
     db.session.delete(tip)
     db.session.commit()
     return redirect(url_for('main.admin_dashboard'))
+
+#カウンセラーチャット関係の処理

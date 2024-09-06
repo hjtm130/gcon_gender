@@ -1,6 +1,6 @@
 .venv
 venv
 __pycache__
-instance
+instance/private.db
 static/uploads
 .env

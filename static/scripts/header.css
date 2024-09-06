@@ -1,8 +1,8 @@
-/*ヘッダーはheader.htmlで読み込みたいので別でcss作りたい*/
 /******* ヘッダーのスタイル ********/
 nav {
-    background: #fff;
+    background: #ffffff;
     width: 100%;
+    overflow: hidden;
 }
 
 /* ヘッダーを固定させる */
@@ -12,28 +12,38 @@ nav.fixed {
     top: 0;
 }
 
-.wrapper {
-    margin: 0 auto;
-    max-width: 100%;
-}
-
 nav ul {
     justify-content: flex-end;
     display: flex;
     list-style: none;
+    margin: 0;
+    padding: 0;
+    
 }
 
-.item {
-    margin: 0 2em;
-    padding: 17px 0;
-    font-weight:bold;
+nav ul li{
+    display: inline-block;
 }
 
-.item a {
-    color: #48D1CC;
+nav li:not(:last-child){
+    border-right:2px solid #ddd;
+}
+
+nav ul li a{
+    display: block;
+    color: #091f09;
+    text-align: center;
     text-decoration: none;
+    padding:14px 18px;
 }
 
-.item a:hover{
-    color: #0000FF;
+nav li a:hover{
+    color: #c72dbd;
+    text-decoration: none;
+    border-bottom: 3px solid #c72dbd;
+}
+
+nav li a.current{
+    color: #56d2ff;
+    border-bottom: 3px solid #56d2ff;
 }

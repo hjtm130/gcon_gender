@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ tag.name }}のTips</title>
+</head>
+<body>
+    <h1>{{ tag.name }}のTips</h1>
+    <ul>
+        {% for tip in tips %}
+        <a href="{{ tip.link }}"><li>{{ tip.title }}</a>: {{ tip.content }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('main.home') }}">ホームに戻る</a>
+</body>
+</html>

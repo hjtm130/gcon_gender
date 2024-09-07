@@ -8,6 +8,7 @@ migrate = Migrate()
 
 class User(db.Model):
     __bind_key__ = 'private'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
@@ -54,3 +55,23 @@ class TipTag(db.Model):
 
     tip_id = db.Column(db.Integer, db.ForeignKey('tips.id'), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+
+class CounselorChatRoom(db.Model):
+    __bind_key__ = 'private'
+    __tablename__ = 'counselor_chat_room'
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.String(500), nullable=False)
+    counselor = db.Column(db.String(500), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+class CounselorChatMessage(db.Model):
+    __bind_key__ = 'private'
+    __tablename__ = 'counselor_chat_message'
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, nullable=False)
+    message = db.Column(db.String(500), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+class CounselorChat(db.Model):
+    __bind_key__ = 'private'
+    room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    counselor_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_message.id'), primary_key=True)

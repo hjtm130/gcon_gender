@@ -61,6 +61,37 @@
         {% endfor %}
     </ul>
 
+    <form method="POST" action="{{ url_for('main.admin_dashboard') }}">
+        <label for="status">Select Status:</label>
+        <select name="status" id="status">
+            <option value="">All</option>
+            <option value="user">User</option>
+            <option value="counselor">Counselor</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+
+    <h2>User List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <a href="{{ url_for('main.home') }}">ホームに戻る</a>
 </body>
 </html>

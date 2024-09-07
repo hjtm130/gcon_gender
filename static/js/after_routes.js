@@ -3,7 +3,7 @@ console.log('routes.js が読み込まれました');
 
 // static/js/routes.js
 document.addEventListener('DOMContentLoaded', function() {
-    fetch('/header/after')
+    fetch('/header_after')
         .then(response => response.text())
         .then(data => {
             document.body.insertAdjacentHTML('afterbegin', data);

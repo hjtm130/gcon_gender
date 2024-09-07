@@ -40,7 +40,7 @@ def login():
                 if user.status == 'admin':
                     return redirect(url_for('main.admin_dashboard'))
                 elif user.status == 'user':
-                    return redirect(url_for('main.home'))
+                    return redirect(url_for('main.user_dashboard'))
                 elif user.status == 'counselor':
                     return redirect(url_for('main.counselor_dashboard'))
             else:
@@ -53,7 +53,7 @@ def login():
 def logout():
     session.pop('username', None)
     session.pop('status', None)
-    return redirect(url_for('main.login'))
+    return redirect(url_for('main.home'))
 
 @main_bp.route('/')
 def home():
@@ -61,7 +61,10 @@ def home():
 
 @main_bp.route('/home')
 def user_dashboard():
-    return render_template('User_dashboard.html')
+    if session['status'] == 'user':
+        return render_template('User_dashboard.html')
+    else:
+        return redirect(url_for('main.access_error'))
 
 # --------AIchatに関する処理--------
 
@@ -154,7 +157,9 @@ def header():
     return render_template('before_header.html')
 @main_bp.route('/header_after')
 def header_after():
-    return render_template('after_header.html')
+    username = session.get('username')
+    status = session.get('status')
+    return render_template('after_header.html', username=username, status=status)
 
 @main_bp.route('/tags')
 def tags():
@@ -172,57 +177,73 @@ def tips_by_tag(tag_id):
 # counselorログイン後
 @main_bp.route('/counselor_dashboard')
 def counselor_dashboard():
-    return render_template('Counselor_dashboard.html')
+    if session['status'] == 'counselor':
+        return render_template('Counselor_dashboard.html')
+    else:
+        return redirect(url_for('main.access_error'))
 
 # adminログイン後
 @main_bp.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
-    status = None
-    if request.method == 'POST':
-        # タグの追加
-        if 'tag_name' in request.form:
-            tag_name = request.form['tag_name']
-            if tag_name:
-                existing_tag = Tag.query.filter_by(name=tag_name).first()
-                if not existing_tag:
-                    tag = Tag(name=tag_name)
-                    db.session.add(tag)
+    if session['status'] == 'admin':
+        status = None
+        if request.method == 'POST':
+            # タグの追加
+            if 'tag_name' in request.form:
+                tag_name = request.form['tag_name']
+                if tag_name:
+                    existing_tag = Tag.query.filter_by(name=tag_name).first()
+                    if not existing_tag:
+                        tag = Tag(name=tag_name)
+                        db.session.add(tag)
+                        db.session.commit()
+            
+            # ティップの追加
+            elif 'tip_title' in request.form and 'tip_content' in request.form:
+                title = request.form['tip_title']
+                content = request.form['tip_content']
+                link = request.form.get('tip_link', '')
+                tag_ids = request.form.getlist('tip_tags')
+
+                if title and content:
+                    tip = Tip(title=title, content=content, link=link)
+                    for tag_id in tag_ids:
+                        tag = Tag.query.get(int(tag_id))
+                        if tag:
+                            tip.tags.append(tag)
+                    db.session.add(tip)
                     db.session.commit()
+
+            elif 'status' in request.form:
+                status = request.form.get('status')
         
-        # ティップの追加
-        elif 'tip_title' in request.form and 'tip_content' in request.form:
-            title = request.form['tip_title']
-            content = request.form['tip_content']
-            link = request.form.get('tip_link', '')
-            tag_ids = request.form.getlist('tip_tags')
-
-            if title and content:
-                tip = Tip(title=title, content=content, link=link)
-                for tag_id in tag_ids:
-                    tag = Tag.query.get(int(tag_id))
-                    if tag:
-                        tip.tags.append(tag)
-                db.session.add(tip)
-                db.session.commit()
-
-        elif 'status' in request.form:
-            status = request.form.get('status')
-    
-    tags = Tag.query.all()
-    tips = Tip.query.all()
-    users = User.query.filter_by(status=status).all() if status else User.query.all()
-    return render_template('Admin/admin_dashboard.html', tags=tags, tips=tips, users=users)
+        tags = Tag.query.all()
+        tips = Tip.query.all()
+        users = User.query.filter_by(status=status).all() if status else User.query.all()
+        return render_template('Admin/admin_dashboard.html', tags=tags, tips=tips, users=users)
+    else:
+        return redirect(url_for('main.access_error'))
 
 @main_bp.route('/delete_tag/<int:tag_id>', methods=['POST'])
 def delete_tag(tag_id):
-    tag = Tag.query.get_or_404(tag_id)
-    db.session.delete(tag)
-    db.session.commit()
-    return redirect(url_for('main.admin_dashboard'))
+    if session['status'] == 'admin':
+        tag = Tag.query.get_or_404(tag_id)
+        db.session.delete(tag)
+        db.session.commit()
+        return redirect(url_for('main.admin_dashboard'))
+    else:
+        return redirect(url_for('main.access_error'))
 
 @main_bp.route('/delete_tip/<int:tip_id>', methods=['POST'])
 def delete_tip(tip_id):
-    tip = Tip.query.get_or_404(tip_id)
-    db.session.delete(tip)
-    db.session.commit()
-    return redirect(url_for('main.admin_dashboard'))
+    if session['status'] == 'admin':
+        tip = Tip.query.get_or_404(tip_id)
+        db.session.delete(tip)
+        db.session.commit()
+        return redirect(url_for('main.admin_dashboard'))
+    else:
+        return redirect(url_for('main.access_error'))
+
+@main_bp.route('/403error')
+def access_error():
+    return render_template('403error.html')

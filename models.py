@@ -74,4 +74,4 @@ class CounselorChat(db.Model):
     __bind_key__ = 'private'
     room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    counselor_id = db.Column(db.Integer, db.ForeignKey('counselors_chat_message.id'), primary_key=True)
+    counselor_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_message.id'), primary_key=True)

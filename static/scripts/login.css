@@ -1,17 +1,15 @@
-/* login.css */
-
 /* 全体レイアウトを縦方向に整える */
 body {
     display: flex;
     flex-direction: column;
     align-items: center;  /* 中央揃え */
-    justify-content: flex-start; /* 上から順に並べる */
+    justify-content: flex-start; 
     height: 100vh;
     background-color: #f4f4f4;
     margin: 0;
 }
 
-/* ログインフォームは既存のスタイルのまま */
+
 .login-container {
     background-color: white;
     border: 1px solid #ccc;
@@ -23,7 +21,21 @@ body {
     align-items: center;
     flex-direction: column;
     width: 400px;
+    height: auto;
+    margin: auto;
     margin-top: 20px; /* ヘッダーとフォームの間隔 */
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央揃え */
+    width: 100%;
+}
+
+/* ログインボタンのスタイル */
+button {
+    margin-top: 10px; /* 上下の間隔を調整 */
 }
 
 

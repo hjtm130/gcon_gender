@@ -1,15 +1,17 @@
-/* 全体のスタイル */
+/* login.css */
+
+/* 全体レイアウトを縦方向に整える */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    align-items: center;  /* 中央揃え */
+    justify-content: flex-start; /* 上から順に並べる */
     height: 100vh;
+    background-color: #f4f4f4;
     margin: 0;
 }
 
-/* ログインフォーム全体のコンテナ */
+/* ログインフォームは既存のスタイルのまま */
 .login-container {
     background-color: white;
     border: 1px solid #ccc;
@@ -17,80 +19,11 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     display: flex;
-    justify-content: center; /* 水平方向の中央揃え */
-    align-items: center;     /* 垂直方向の中央揃え */
-    flex-direction: column;  /* 中央揃えにするため、縦に整列 */
-    width: 400px;            /* 全体の幅を調整 */
-    height: 500px;           /* コンテンツの高さも調整 */
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    margin-top: 20px; /* ヘッダーとフォームの間隔 */
 }
 
-/* フォーム部分 */
-form {
-    width: 100%;
-}
-
-input[type="text"], input[type="password"], select {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-/* ラベルのスタイル */
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-/* ボタンのスタイル */
-button {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-}
-
-button:hover {
-    background-color: #555;
-}
-
-/* 新規登録セクションのスタイル */
-.signup-section {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.signup-section p {
-    margin-bottom: 20px;
-}
-
-.signup-button {
-    background-color: transparent;
-    border: 2px solid #333;
-    color: #333;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-}
-
-.signup-button:hover {
-    background-color: #f4f4f4;
-}
-
-/* リンクのスタイル */
-a {
-    color: #ff69b4;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
 

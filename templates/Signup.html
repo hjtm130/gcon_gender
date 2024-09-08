@@ -9,14 +9,17 @@
 <body>
     <div class="login-container">
         <div class="login-form">
+            <script src="{{ url_for('static', filename='js/before_routes.js') }}"></script>
             <h1>Signup</h1>
             <form method="POST">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
                 <br>
+               
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
                 <br>
+               
                 <label for="status">Status:</label> 
                 <select name="status">
                     <option value="admin" id="admin" name="admin">Admin</option>

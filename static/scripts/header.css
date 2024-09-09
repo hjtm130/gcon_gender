@@ -1,12 +1,8 @@
 /******* ヘッダーのスタイル ********/
 nav {
-    background-color: #e0f7fa;
-    width: calc(100% - 250px); /* 目次の幅を考慮して調整 */
-    position: fixed;
-    top: 0;
-    left: 0; /* 左側も固定 */
-    z-index: 1001; /* 目次の上に表示 */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 少し影を付ける */
+    background-color: #e0f7fa; /* 背景色を薄い水色に変更 */
+    width: 100%;
+    overflow: hidden;
 }
 
 /* ロゴ画像のサイズを小さくする */

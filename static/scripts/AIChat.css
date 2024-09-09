@@ -1,0 +1,8 @@
+/* AIの解答部分の背景色を薄い緑色に */
+.ai-response {
+    background-color: #e0f7e0; /* 薄い緑色 */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

@@ -1,13 +1,19 @@
 /******* ヘッダーのスタイル ********/
 nav {
-    background: #ffffff;
+    background-color: #e0f7fa; /* 背景色を薄い水色に変更 */
     width: 100%;
     overflow: hidden;
 }
 
+/* ロゴ画像のサイズを小さくする */
+nav .logo img {
+    width: 100px; /* ここで画像の幅を調整 */
+    height: auto; 
+}
+
 /* ヘッダーを固定させる */
 nav.fixed {
-    position: fixed;/*fixedで固定*/
+    position: fixed;
     right: 0;
     top: 0;
 }
@@ -18,7 +24,6 @@ nav ul {
     list-style: none;
     margin: 0;
     padding: 0;
-    
 }
 
 nav ul li{
@@ -26,7 +31,7 @@ nav ul li{
 }
 
 nav li:not(:last-child){
-    border-right:2px solid #ddd;
+    border-right: 2px solid #ddd;
 }
 
 nav ul li a{
@@ -34,16 +39,21 @@ nav ul li a{
     color: #091f09;
     text-align: center;
     text-decoration: none;
-    padding:14px 18px;
+    padding: 14px 18px;
 }
 
-nav li a:hover{
+nav li a:hover {
     color: #c72dbd;
     text-decoration: none;
     border-bottom: 3px solid #c72dbd;
 }
 
-nav li a.current{
+nav li a.current {
     color: #56d2ff;
     border-bottom: 3px solid #56d2ff;
 }
+
+top-editarea {
+    border-bottom: 1px solid #3585f4;
+}
+

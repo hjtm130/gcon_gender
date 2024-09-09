@@ -10,7 +10,7 @@ class User(db.Model):
     __bind_key__ = 'private'
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
+    username = db.Column(db.String(150), unique=False, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     status = db.Column(db.String(20), nullable=False)
 

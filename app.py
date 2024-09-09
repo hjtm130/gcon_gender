@@ -1,10 +1,10 @@
 from flask import Flask
-from models import db, migrate, User
-from flask import render_template, request, redirect, url_for, session
-from models import db, Tip, Tag, TipTag, ChatLog
+from models import db, migrate
+from flask_socketio import SocketIO
 
 def create_app():
     app = Flask(__name__)
+    socketio = SocketIO(app)
     app.config.from_pyfile('config.py', silent=True)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///public.db'
@@ -24,4 +24,4 @@ if __name__ == '__main__':
     app = create_app()
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, threaded=True)

@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.section {
+    padding: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.section#myBody {
+    background-color: #f0f8ff;
+}
+
+.section#sex {
+    background-color: #fff0f0;
+}
+
+.section#masturbation {
+    background-color: #f0fff0;
+}
+
+.section#menstruation {
+    background-color: #fffaf0;
+}
+
+/*目次*/
+.toc-container {
+    border: 2px solid #007bff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin: 0 auto;
+}
+
+/* 目次のリンク部分を縦に並べる */
+.toc-container a {
+    display: block;  /* 各リンクを縦に並べる */
+    margin-bottom: 10px;
+    text-decoration: none; 
+    color: #007bff;  /* リンクの色*/
+}
+
+.toc-container a:hover {
+    text-decoration: underline;  
+}

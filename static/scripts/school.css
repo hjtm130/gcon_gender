@@ -31,7 +31,7 @@ body {
 /*目次*/
 .toc-container {
     position: fixed;
-    top: 50px; /* 上からの距離 */
+    top: 250px; /* 上からの距離 */
     right: 20px; /* 右からの距離 */
     border: 2px solid #007bff;
     padding: 20px;

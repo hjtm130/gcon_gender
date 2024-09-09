@@ -1,15 +1,16 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
-    margin-right: 250px;
+    margin-right: 0; /* 目次の幅を考慮して調整 */
 }
 
 .section {
-    border: 2px;
+    border: 2px solid #ccc; /* 枠線の色を指定 */
     padding: 20px;
     border-radius: 10px;
     background-color: #f0f8ff;
     margin-bottom: 20px;
+    margin-right: 240px; 
 }
 
 .section#myBody {
@@ -28,19 +29,20 @@ body {
     background-color: #fffaf0;
 }
 
-/*目次*/
+/* 目次 */
 .toc-container {
     position: fixed;
-    top: 250px; /* 上からの距離 */
-    right: 20px; /* 右からの距離 */
+    top: 100px;
+    right: 20px;
     border: 2px solid #007bff;
     padding: 20px;
     border-radius: 10px;
     background-color: #f9f9f9;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
-    width: 200px; /* 目次の幅 */
-    z-index: 1000; /* コンテンツの上に表示 */
+    width: 200px;
+    z-index: 1000; /* 他のコンテンツの上に表示 */
 }
+
 
 /* 目次のリンク部分を縦に並べる */
 .toc-container a {

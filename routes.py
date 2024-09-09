@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User, ChatLog, Tip, Tag, TipTag # データベースのインポート
+from models import db, User, ChatLog, Tip, Tag, TipTag, CounselorChat, CounselorChatMessage, CounselorChatRoom # データベースのインポート
 import openai
 from markupsafe import escape
 import os
 import sqlite3
+from flask_socketio import SocketIO, emit, join_room, leave_room
 
 # Blueprintの作成
 main_bp = Blueprint('main', __name__)
@@ -14,7 +15,7 @@ def signup():
         username = request.form['username']
         password = request.form['password']
         status = request.form['status']
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username, status=status).first()
         if user is None:
             new_user = User(username=username, status=status)
             new_user.set_password(password)
@@ -35,6 +36,7 @@ def login():
         user = User.query.filter_by(username=username, status=status).first()
         if user and user.check_password(password):
             if user:
+                session['userid'] = user.id
                 session['username'] = user.username
                 session['status'] = user.status
                 if user.status == 'admin':
@@ -131,15 +133,6 @@ def delete_logs():
 
 #-------------以上---------------
 
-@main_bp.route('/CounselorChat')
-def counselor_chat():
-    conn = sqlite3.connect('chattest.db')
-    cursor = conn.cursor()
-    cursor.execute("select id, name from user")
-    user_info = cursor.fetchall()
-    conn.close()
-    return render_template('CounselorChat.html')
-
 @main_bp.route('/Tips')
 def tips():
     return render_template('Tips.html')
@@ -172,13 +165,11 @@ def tips_by_tag(tag_id):
     tips = tag.tips
     return render_template('Tips/tips_by_tag.html', tag=tag, tips=tips)
 
-#カウンセラーチャット関係の処理
-
 # counselorログイン後
 @main_bp.route('/counselor_dashboard')
 def counselor_dashboard():
     if session['status'] == 'counselor':
-        return render_template('Counselor_dashboard.html')
+        return render_template('Counselor/Counselor_dashboard.html')
     else:
         return redirect(url_for('main.access_error'))
 
@@ -247,3 +238,13 @@ def delete_tip(tip_id):
 @main_bp.route('/403error')
 def access_error():
     return render_template('403error.html')
+
+#カウンセラーチャット関係の処理
+@main_bp.route('/CounselorChat')
+def counselor():
+    if session['status'] == 'user':
+        return render_template('CounselorChat/user.html')
+    elif session['status'] == 'counselor':
+        return render_template('CounselorChat/counselor.html')
+    else:
+        return redirect(url_for('main.access_error'))

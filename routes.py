@@ -65,6 +65,8 @@ def home():
 def user_dashboard():
     if session['status'] == 'user':
         return render_template('User_dashboard.html')
+    elif session['status'] == 'counselor':
+        return render_template('Counselor_dashboard.html')
     else:
         return redirect(url_for('main.access_error'))
 

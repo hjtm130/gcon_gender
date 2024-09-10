@@ -1,113 +1,78 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
 
-.contents {
-    width: 100%;
-    text-align: center;
-    color: #300;
-    display: flex;
-    flex-direction: column; /* 子要素を縦に並べる */
-    align-items: center; /* 横方向に中央揃え */
-    margin: 20px auto;
-    max-width: 1200px; /* コンテンツの最大幅を指定 */
+/* リセットCSSの適用 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.explanation{
-    border:solid 3px #e5ffe5;
+.selection {
+    display: inline-flex; 
+    border: solid 3px #c0fac0;
+    background-color: #c0fac0;
+    border-bottom: 0.1875em solid #91a59139; /* 影色 */
+    border-radius: 20px; /* 丸み */
+    width: 250px; /* ボックスの幅 */
+    height: 150px; /* ボックスの高さ */
+    font-family: "Arial Black";
+    position: relative;
+    margin: 10px; /* ボタン間のスペース */
+    text-align: center;
+    padding: 10px;
+    line-height: normal; /* テキストの高さ調整 */
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    flex-direction: column; 
+}
+
+.selection a {
+    display: block;
+    color: rgb(20, 146, 157);
+    text-decoration:underline;
+    font-size: 1.2em;
+    margin-bottom: 5px; /* リンクとテキストの間隔 */
+}
+
+.selection:hover {
+    border-bottom-color: transparent;
+    transform: translateY(0.1875em);
+}
+
+
+
+.selection:active {
+    background-color: #ebebeb;
+    box-shadow: inset 4px 4px 8px rgb(0 0 0 / 16%);
+}
+
+.link-box-container {
+    display: flex;
+    justify-content: center; 
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+h1 {
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    color: #333;
+    text-align: left;
+    width: 100%;
+}
+
+.explanation {
+    border: solid 3px #e5ffe5;
     border-radius: 20px;
     padding: 20px;
     text-align: center;
     margin: 30px;
-    background-color:#e5ffe5;
-    font-family: "Noto Sans JP";
-    
-}
-
-ul{
-    list-style-type:none;
-}
-
-.selection{
-    display: inline-block;
-    border:solid 3px #e5ffe5;
     background-color: #e5ffe5;
-    border-bottom: 0.1875em solid #91a591;/*影色*/
-    border-radius: 20px; /*丸み*/
-    width: 100px;
-    height: 90px;
-    font-family: "Arial black";
-    position: relative;
-    margin: 0 auto;
-    text-align: center;/* ←文字を左右に中央揃え */
-    line-height: 80px;
-	cursor: pointer;
-	transition: all 0.3s ease 0s;
+    font-family: "Noto Sans JP";
 }
 
-.selection a{
-    color: rgb(20, 146, 157);
-    text-decoration: none;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-}
 
-.selection:hover{
-    border-bottom-color: transparent;
-	transform: translateY(0.1875em);
-}
 
-h1 {
-    margin-bottom: 30px; /* ボックスとの間にスペースを追加 */
-    font-size: 2.5em;
-    color: #333;
-    text-align: left; /* 左寄せに変更 */
-    width: 100%; /* 幅を100%にして左に寄せる */
-}
-
-/* 各リンクボックスのスタイルを維持しつつ、全体のレイアウト調整 */
-.link-box-container {
-    display: flex;
-    justify-content: space-around; /* ボックス間にスペースを均等に */
-    flex-wrap: wrap; /* ボックスを折り返し可能に */
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* リンクボックス全体のコンテナ設定 */
-.link-box-container {
-    display: flex;
-    justify-content: space-around; /* ボックス間に均等なスペースを確保 */
-    flex-wrap: wrap; /* ボックスを折り返し可能に */
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* ボックスを横並びにするためのスタイル */
-.link-box {
-    border: 1px solid #ccc;
-    border-radius: 15px;
-    padding: 20px;
-    width: 30%; /* 幅を少し広くする */
-    box-sizing: border-box;
-    text-align: center;
-    margin: 10px; /* ボックス同士の間隔 */
-    background-color: #f9f9f9; /* 背景色 */
-    transition: all 0.3s ease;
-}
-
-/* レスポンシブ対応: 画面幅が狭いときはボックスを縦に並べる */
-@media (max-width: 768px) {
-    .link-box {
-        width: 100%; /* フル幅に変更 */
-    }
-}
-
-.link-box a {
-    display: block;
-    font-size: 1.5em;
-    margin-bottom: 10px;
-    text-decoration: underline; /* 下線を表示 */
-    color: #1138e495;
-}

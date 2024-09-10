@@ -11,27 +11,24 @@
 </head>
 <body>
     <div class="contents">
-        <script src="{{ url_for('static', filename='js/after_routes.js') }}"></script>
-       
         <h1>home</h1>
 
         <div class="link-box-container">
-            <div class="link-box">
-                <a href="/AIChat">AIChat</a>
+            <a href="/AIChat" class="selection">
+                <div>AIChat</div>
                 <p>AIにいろいろ聞いてみよう！</p>
-            </div>
+            </a>
         
-            <div class="link-box">
-                <a href="/Tips">Tips</a>
+            <a href="/Tips" class="selection">
+                <div>Tips</div>
                 <p>性について知識を深めよう！</p>
-            </div>
+            </a>
         
-            <div class="link-box">
-                <a href="/CounselorChat">CounselorChat</a>
+            <a href="/CounselorChat" class="selection">
+                <div>CounselorChat</div>
                 <p>専門の方に相談してみよう！</p>
-            </div>
+            </a>
         </div>
-        
 
         <div class="explanation">
             <p>
@@ -45,7 +42,6 @@
                 (サービス名)により、性の話題がタブー視されず、性被害が減ることを願っております。
             </p>
         </div>
-
     </div>
 </body>
 </html>

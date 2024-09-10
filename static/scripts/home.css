@@ -74,5 +74,86 @@ h1 {
     font-family: "Noto Sans JP";
 }
 
+/*ログインボタン*/
+.buttonIconText02 {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ボタン内のアイコンとテキストを中央に配置 */
+    width: 100%;
+    max-width: 320px;
+    height: 64px;
+    padding: 8px;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background-color: #6fa24a;
+    border-radius: 32px; /* (buttonの高さ / 2) の値 */
+    text-align: center;
+    overflow: hidden; /* テキストがはみ出さないようにする */
+    text-decoration: none; /* リンクの下線を消す */
+}
+
+.buttonIconText02 a {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ボタン全体をリンクにする */
+    width: 100%;
+    height: 100%;
+    text-decoration: none; /* リンクの下線を消す */
+    color: inherit; /* リンクの文字色を親要素から継承する */
+}
+
+.buttonIconText02__reverse {
+    flex-direction: row-reverse;
+    padding: 8px 8px 8px 64px;
+}
+
+.buttonIconText02_icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    aspect-ratio: 1;
+    overflow: hidden;
+}
+
+.buttonIconText02_text {
+    flex-shrink: 1;
+    width: 100%;
+    text-align: center; /* テキストを中央に配置 */
+}
+
+@media (any-hover: hover) {
+    .buttonIconText02 {
+        transition: background-color 0.2s;
+    }
+
+    .buttonIconText02_icon {
+        transition: transform 0.2s;
+    }
+
+    .buttonIconText02:hover {
+        background-color: #54802f;
+    }
+
+    .buttonIconText02:hover .buttonIconText02_icon {
+        transform: translateX(4px);
+    }
+
+    .buttonIconText02:hover .buttonIconText02_icon__left {
+        transform: translateX(-4px);
+    }
+}
+
+
+
+.parent-container {
+    display: flex;
+    justify-content: center; /* 水平方向に中央揃え */
+    align-items: center; /* 垂直方向に中央揃え（必要に応じて） */
+
+}
+
 
 

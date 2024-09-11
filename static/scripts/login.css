@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Kosugi');
+
 /* 全体レイアウトを縦方向に整える */
 body {
     display: flex;
@@ -7,6 +9,7 @@ body {
     height: 100vh;
     background-color: #f4f4f4;
     margin: 0;
+    font-family: 'Kosugi', sans-serif;
 }
 
 

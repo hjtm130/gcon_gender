@@ -1,3 +1,20 @@
+h1{
+    color: #000b16;
+}
+
+p{
+    color: #000b16;
+}
+
+.AIChat{
+    color: #007bff;
+}
+
+.AIChat:hover{
+    color: #ff00ee;
+    text-decoration: none;
+}
+
 .door-link {
     display: inline-block;
     position: relative;

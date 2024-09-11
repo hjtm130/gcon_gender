@@ -16,14 +16,14 @@ input[type="text"] {
 }
 
 input[type="submit"]{
-    background-color: #e0f7e0;
+    background-color: #f1fcf1;
     color: #063706;
     border: 2px solid #063706;
     border-radius: 4px;
 }
 
 button{
-    background-color: #e0f7e0;
+    background-color: #f1fcf1;
     color: #063706;
     border: 2px solid #063706;
     border-radius: 4px;

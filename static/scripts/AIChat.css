@@ -7,6 +7,25 @@
     margin-bottom: 5px;
 }
 
+h1{
+    color:#063706
+}
+
 input[type="text"] { 
     width: 80%;
+}
+
+input[type="submit"]{
+    background-color: #e0f7e0;
+    color: #063706;
+    border: 2px solid #063706;
+    border-radius: 4px;
+}
+
+button{
+    background-color: #e0f7e0;
+    color: #063706;
+    border: 2px solid #063706;
+    border-radius: 4px;
+    margin: 4px; 
 }

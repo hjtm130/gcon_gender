@@ -12,27 +12,27 @@
 
             <script src="{{ url_for('static', filename='js/before_routes.js') }}"></script>
             
-            <h1>Login</h1>
+            <h1>ログイン</h1>
             <form method="POST">
-                <label for="username">Username:</label>
+                <label for="username">ユーザー名</label>
                 <input type="text" id="username" name="username" required>
                
                 <br>
                
-                <label for="password">Password:</label>
+                <label for="password">パスワード</label>
                 <input type="password" id="password" name="password" required>
                
                 <br>
                
-                <label for="status">Status:</label> 
+                <label for="status">属性</label> 
                 <select name="status">
                     <option value="admin" id="admin" name="admin">Admin</option>
                     <option value="user" id="user" name="user">User</option>
                     <option value="counselor" id="counselor" name="counselor">Counselor</option>
                 </select><br>
-                <button type="submit">Login</button>
+                <button type="submit">ログイン</button>
             </form>
-            <p>Don't have an account? <a href="{{ url_for('main.signup') }}">Signup</a></p>
+            <p>アカウントをお持ちでないですか? <a href="{{ url_for('main.signup') }}">登録</a></p>
         </div>
 
       

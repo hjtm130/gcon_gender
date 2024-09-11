@@ -72,6 +72,7 @@
                         chatLog.appendChild(userMessage);
 
                         const aiMessage = document.createElement('div');
+                        aiMessage.classList.add('ai-response');  // ここでクラスを追加
                         aiMessage.textContent = 'AI: ' + chat.ai_response;
                         chatLog.appendChild(aiMessage);
                     });
@@ -101,7 +102,8 @@
                         chatLog.appendChild(userMessage);
 
                         const aiMessage = document.createElement('div');
-                        aiMessage.textContent = 'AI: ' + data.message;
+                        aiMessage.classList.add('ai-response');  // ここでクラスを追加
+                        aiMessage.textContent = 'AI: ' + data.ai_message;
                         chatLog.appendChild(aiMessage);
 
                         // 送信ボックスをクリア

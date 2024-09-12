@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User, ChatLog, Tip, Tag, TipTag, CounselorChat, CounselorChatMessage, CounselorChatRoom # データベースのインポート
+from app.models import db, User, ChatLog, Tip, Tag, TipTag, CounselorChat, CounselorChatMessage, CounselorChatRoom # データベースのインポート
 import openai
 from markupsafe import escape
 import os
 import sqlite3
-from flask_socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import emit
+from app import app, socketio
 
 # Blueprintの作成
 main_bp = Blueprint('main', __name__)
@@ -250,3 +251,66 @@ def counselor():
         return render_template('CounselorChat/counselor.html')
     else:
         return redirect(url_for('main.access_error'))
+
+@main_bp.route('/search', methods=['GET'])
+def search():
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        if user:
+            counselors = User.query.filter(User.username != user.username).all()
+            return render_template('CounselorChat/search.html', counselors=counselors)
+    return redirect(url_for('CounselorChat'))
+
+@main_bp.route('/select_counselor/<int:counselor_id>', methods=['GET'])
+def select_counselor(counselor_id):
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        if user:
+            room = CounselorChatRoom.query.filter_by(user_id=user.id, counselor_id=counselor_id).first()
+            if not room:
+                room = CounselorChatRoom(user_id=user.id, counselor_id=counselor_id)
+                db.session.add(room)
+                db.session.commit()
+            return redirect(url_for('chat', room_id=room.id))
+    return redirect(url_for('CounselorChat'))
+
+@app.route('/chat/<int:room_id>', methods=['GET'])
+def chat(room_id):
+    room = CounselorChatRoom.query.get(room_id)
+    if room:
+        messages = CounselorChatMessage.query.filter_by(room_id=room_id).all()
+        return render_template('chat.html', room=room, messages=messages)
+    return redirect(url_for('CounselorChat'))
+
+@app.route('/counselor_chat', methods=['GET'])
+def counselor_chat():
+    if 'username' in session:
+        user = User.query.filter_by(username=session['username']).first()
+        if user:
+            rooms = CounselorChatRoom.query.filter_by(counselor_id=user.id).all()
+            return render_template('CounselorChat/counselor_chat.html', rooms=rooms)
+    return redirect(url_for('CounselorChat'))
+
+# SocketIO events
+@socketio.on('send_message')
+def handle_message(data):
+    new_message = CounselorChatMessage(
+        room_id=data['room_id'],
+        user_id=data['user_id'],
+        message=data['message']
+    )
+    db.session.add(new_message)
+    db.session.commit()
+    emit('receive_message', data, room=data['room_id'])
+
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+if __name__ == '__main__':
+    db.create_all()
+    socketio.run(app, debug=True)

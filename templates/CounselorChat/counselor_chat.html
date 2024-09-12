@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Chat Rooms</title>
+</head>
+<body>
+    <h1>My Chat Rooms</h1>
+    <ul>
+        {% for room in rooms %}
+            <li>
+                Chat with User {{ room.user_id }}
+                <a href="{{ url_for('chat', room_id=room.id) }}">View Chat</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

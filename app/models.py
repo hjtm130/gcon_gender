@@ -60,15 +60,16 @@ class CounselorChatRoom(db.Model):
     __bind_key__ = 'private'
     __tablename__ = 'counselor_chat_room'
     id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(500), nullable=False)
-    counselor = db.Column(db.String(500), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    counselor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class CounselorChatMessage(db.Model):
     __bind_key__ = 'private'
     __tablename__ = 'counselor_chat_message'
     id = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.Integer, nullable=False)
-    message = db.Column(db.String(500), nullable=False)
+    room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    message = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 class CounselorChat(db.Model):
     __bind_key__ = 'private'

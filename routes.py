@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
 from models import db, User, ChatLog, Tip, Tag, TipTag, CounselorChat, CounselorChatMessage, CounselorChatRoom # データベースのインポート
-import openai
 from markupsafe import escape
+from dotenv import load_dotenv
 import os
+import openai
 import sqlite3
 from flask_socketio import emit
 # from app import socketio
@@ -72,6 +73,9 @@ def user_dashboard():
         return redirect(url_for('main.access_error'))
 
 # --------AIchatに関する処理--------
+
+# .env ファイルを読み込む
+load_dotenv()
 
 # 環境変数からAPIキーを取得
 openai_api_key = os.environ.get("OPENAI_API_KEY")

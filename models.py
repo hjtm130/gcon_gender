@@ -7,7 +7,7 @@ db = SQLAlchemy()
 migrate = Migrate()
 
 class User(db.Model):
-    __bind_key__ = 'private'
+    # __bind_key__ = 'private'
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=False, nullable=False)
@@ -21,7 +21,7 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
     
 class ChatLog(db.Model):
-    __bind_key__ = 'private'
+    # __bind_key__ = 'private'
     id = db.Column(db.Integer, primary_key=True)
     user_message = db.Column(db.String(500), nullable=False)
     ai_response = db.Column(db.String(500), nullable=False)
@@ -57,22 +57,22 @@ class TipTag(db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
 
 class CounselorChatRoom(db.Model):
-    __bind_key__ = 'private'
+    # __bind_key__ = 'private'
     __tablename__ = 'counselor_chat_room'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    counselor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    counselor_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 class CounselorChatMessage(db.Model):
-    __bind_key__ = 'private'
+    # __bind_key__ = 'private'
     __tablename__ = 'counselor_chat_message'
     id = db.Column(db.Integer, primary_key=True)
     room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     message = db.Column(db.Text, nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 class CounselorChat(db.Model):
-    __bind_key__ = 'private'
+    # __bind_key__ = 'private'
     room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     counselor_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_message.id'), primary_key=True)

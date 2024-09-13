@@ -22,13 +22,20 @@ def create_app():
     from routes import main_bp
     app.register_blueprint(main_bp)
 
+    return app
+
+def create_socketio(app):
+    socketio.init_app(app, async_mode='eventlet')
     from events import register_events
     register_events(socketio)
 
-    return app, socketio
+    return socketio
 
 if __name__ == '__main__':
-    app, socketio = create_app()
+    app = create_app()
+    socketio = create_socketio(app)
+
     with app.app_context():
         db.create_all()
+
     socketio.run(app, debug=True)

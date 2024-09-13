@@ -143,13 +143,13 @@ def create_text():
     generated_text = escape(generated_text)
     
     # チャットログをデータベースに保存
-    chat_log = ChatLog(user_message=message, ai_response=generated_text, serious_score="深刻度: " + str(serious_score), system_message=system_message)
+    chat_log = ChatLog(user_message=message, ai_response=generated_text, serious_score="[深刻度]: " + str(serious_score), system_message=system_message)
     db.session.add(chat_log)
     db.session.commit()
     
     response_data = {'message': generated_text}
     # デバッグ用
-    debug_message = "深刻度: " + str(serious_score)
+    debug_message = "[深刻度]: " + str(serious_score)
     response_data['debug_message'] = debug_message
     #-----------
     if system_message:

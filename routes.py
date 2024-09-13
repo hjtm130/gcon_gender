@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import openai
 import sqlite3
+import re
 from flask_socketio import emit
 # from app import socketio
 
@@ -94,12 +95,27 @@ def create_text():
     
     # ログからメッセージをフォーマットする
     messages = []
+
+    # ここにプロンプト（システムメッセージ）を追加
+    messages.append({
+        "role": "system", 
+        "content": "あなたは思春期の青少年のカウンセリングを担当するAIカウンセラーです。ユーザーの質問や相談に常に真摯に返答してください。返答は中高生にも分かりやすいように短くしてください"
+    })
+
     for log in reversed(past_logs):  # 最新のログが先に来るように逆順で処理
         messages.append({"role": "user", "content": log.user_message})
         messages.append({"role": "assistant", "content": log.ai_response})
+        messages.append({"role": "assistant", "content": log.serious_score}) #深刻度を加味する
     
     # 現在のメッセージを追加
     messages.append({"role": "user", "content": message})
+
+    # プロンプトに深刻度のルールを追加
+    system_prompt = {
+        "role": "user",
+        "content": "これまでのユーザーの発言と深刻度の履歴に基づき、場合によっては人のカウンセラーへと繋ぐために深刻度を10段階で評価し、返答の前に記述してください(例: [深刻度]: 1\n なにかお困りですか？)。目安は1は問題なし、5は慎重なケアが必要、7でカウンセラーに繋ぐ必要あり、10で緊急事態です。"
+    }
+    messages.append(system_prompt)
     
     # OpenAI APIを使って応答を生成
     res = openai.ChatCompletion.create(
@@ -108,15 +124,49 @@ def create_text():
     )
     
     generated_text = res['choices'][0]['message']['content']
+
+    if "[深刻度]" in generated_text:
+        # 深刻度の値を抽出
+        serious_score = extract_serious_score(generated_text)
+        # 深刻度が一定値以上ならシステムメッセージを生成
+        if serious_score >= 7:
+            system_message = "この相談は、あなたにとってとても大事な問題のようです。カウンセラーへの相談してみませんか？"
+        else:
+            system_message = None
+    else:
+        serious_score = 0
+        system_message = None
+
+    # 必要に応じて生成されたテキストから深刻度情報を削除
+    generated_text = remove_serious_score(generated_text)    
+    
     generated_text = escape(generated_text)
     
     # チャットログをデータベースに保存
-    chat_log = ChatLog(user_message=message, ai_response=generated_text)
+    chat_log = ChatLog(user_message=message, ai_response=generated_text, serious_score="深刻度: " + str(serious_score), system_message=system_message)
     db.session.add(chat_log)
     db.session.commit()
     
-    return jsonify({'message': generated_text})
+    response_data = {'message': generated_text}
+    # デバッグ用
+    debug_message = "深刻度: " + str(serious_score)
+    response_data['debug_message'] = debug_message
+    #-----------
+    if system_message:
+        response_data['system_message'] = system_message
 
+    return jsonify(response_data)
+
+def extract_serious_score(text):
+    # 返答テキストから「深刻度: X」を抽出する処理
+    match = re.search(r'\[深刻度\]: (\d+)', text)
+    if match:
+        return int(match.group(1))
+    return 0
+
+def remove_serious_score(text):
+    # 表示されないように深刻度部分を削除
+    return re.sub(r'\[深刻度\]: \d+', '', text)
 
 @main_bp.route('/chat_logs', methods=['GET'])
 def chat_logs():
@@ -126,7 +176,7 @@ def chat_logs():
 @main_bp.route('/get_chat_log', methods=['GET'])
 def get_chat_log():
     chat_logs = ChatLog.query.order_by(ChatLog.id.asc()).all()
-    chat_log_list = [{'user_message': chat.user_message, 'ai_response': chat.ai_response} for chat in chat_logs]
+    chat_log_list = [{'user_message': chat.user_message, 'ai_response': chat.ai_response, 'serious_score' : chat.serious_score, 'system_message' : chat.system_message} for chat in chat_logs]
     return jsonify(chat_log_list)
 
 @main_bp.route('/delete_logs', methods=['POST'])

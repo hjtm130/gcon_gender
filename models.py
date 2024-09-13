@@ -26,6 +26,8 @@ class ChatLog(db.Model):
     user_message = db.Column(db.String(500), nullable=False)
     ai_response = db.Column(db.String(500), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    serious_score = db.Column(db.String(50), nullable=True)  # 深刻度フィールド
+    system_message = db.Column(db.String(500), nullable=True)
 
 # タグモデル
 class Tag(db.Model):

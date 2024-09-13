@@ -75,6 +75,21 @@
                         aiMessage.classList.add('ai-response');  // ここでクラスを追加
                         aiMessage.textContent = 'AI: ' + chat.ai_response;
                         chatLog.appendChild(aiMessage);
+
+                        // デバッグ用 深刻度表示
+                        if (chat.serious_score) {
+                            const shinkokudo = document.createElement('div');
+                            shinkokudo.textContent = '[debug用]' + chat.serious_score;
+                            chatLog.appendChild(shinkokudo);
+                        }
+
+                        // システムメッセージがある場合に表示
+                        if (chat.system_message) {
+                            const systemMessage = document.createElement('div');
+                            systemMessage.classList.add('system-response');  // ここでクラスを追加
+                            systemMessage.textContent = 'システム: ' + chat.system_message;
+                            chatLog.appendChild(systemMessage);
+                        }
                     });
                 })
                 .catch(error => console.error('Error:', error));
@@ -105,6 +120,20 @@
                         aiMessage.classList.add('ai-response');  // ここでクラスを追加
                         aiMessage.textContent = 'AI: ' + data.message;
                         chatLog.appendChild(aiMessage);
+
+                        // デバック用
+                        if (data.debug_message) {
+                            const shinkokudo = document.createElement('div');
+                            shinkokudo.textContent = '[debug用]' + data.debug_message;
+                            chatLog.appendChild(shinkokudo);
+                        }
+
+                        if (data.system_message) {
+                            const systemMessage = document.createElement('div');
+                            systemMessage.classList.add('system-response');
+                            systemMessage.textContent = 'システム: ' + data.system_message;
+                            chatLog.appendChild(systemMessage);
+                        }
 
                         // 送信ボックスをクリア
                         messageField.value = '';

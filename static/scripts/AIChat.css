@@ -7,6 +7,15 @@
     margin-bottom: 5px;
 }
 
+.system-response {
+    color:#ffffff;
+    background-color: #034e03; /* 濃い緑色 */
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 h1{
     color:#063706
 }

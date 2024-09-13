@@ -55,3 +55,17 @@ body {
 .toc-container a:hover {
     text-decoration: underline;  
 }
+
+/* スマホ画面サイズ以下で目次を非表示 */
+@media (max-width: 768px) {
+    .toc-container {
+        display: none;
+    }
+
+    /* スマホ画面サイズ以下で記事部分を画面横幅いっぱいに広げる */
+    .section {
+        margin-right: 0; /* 目次の幅を考慮していたマージンをリセット */
+        width: 100%; /* 横幅いっぱいに広げる */
+        box-sizing: border-box; /* パディングとボーダーを幅に含める */
+    }
+}

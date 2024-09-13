@@ -55,3 +55,10 @@ body {
 .toc-container a:hover {
     text-decoration: underline;  
 }
+
+/* スマホ画面サイズ以下で目次を非表示 */
+@media (max-width: 768px) {
+    .toc-container {
+        display: none;
+    }
+}

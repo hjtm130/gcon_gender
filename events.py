@@ -1,5 +1,5 @@
 from flask_socketio import emit, join_room, leave_room
-from models import db, CounselorChatMessage
+from models import db
 from app import socketio
 from flask import session
 

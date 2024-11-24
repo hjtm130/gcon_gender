@@ -57,24 +57,3 @@ class TipTag(db.Model):
 
     tip_id = db.Column(db.Integer, db.ForeignKey('tips.id'), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
-
-class CounselorChatRoom(db.Model):
-    # __bind_key__ = 'private'
-    __tablename__ = 'counselor_chat_room'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    counselor_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-class CounselorChatMessage(db.Model):
-    # __bind_key__ = 'private'
-    __tablename__ = 'counselor_chat_message'
-    id = db.Column(db.Integer, primary_key=True)
-    room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    message = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-class CounselorChat(db.Model):
-    # __bind_key__ = 'private'
-    room_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_room.id'), primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    counselor_id = db.Column(db.Integer, db.ForeignKey('counselor_chat_message.id'), primary_key=True)

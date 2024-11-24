@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session, jsonify
-from models import db, User, ChatLog, Tip, Tag, TipTag, CounselorChat, CounselorChatMessage, CounselorChatRoom # データベースのインポート
+from models import db, User, ChatLog, Tip, Tag, TipTag # データベースのインポート
 from markupsafe import escape
 from dotenv import load_dotenv
 import os
@@ -46,8 +46,6 @@ def login():
                     return redirect(url_for('main.admin_dashboard'))
                 elif user.status == 'user':
                     return redirect(url_for('main.user_dashboard'))
-                elif user.status == 'counselor':
-                    return redirect(url_for('main.counselor_dashboard'))
             else:
                 return 'Invalid username, password, or status', 401
         else:
@@ -68,8 +66,6 @@ def home():
 def user_dashboard():
     if session['status'] == 'user':
         return render_template('User_dashboard.html')
-    elif session['status'] == 'counselor':
-        return render_template('Counselor_dashboard.html')
     else:
         return redirect(url_for('main.access_error'))
 
@@ -222,14 +218,6 @@ def tips_by_tag(tag_id):
     tips = tag.tips
     return render_template('Tips/tips_by_tag.html', tag=tag, tips=tips)
 
-# counselorログイン後
-@main_bp.route('/counselor_dashboard')
-def counselor_dashboard():
-    if session['status'] == 'counselor':
-        return render_template('Counselor/Counselor_dashboard.html')
-    else:
-        return redirect(url_for('main.access_error'))
-
 # adminログイン後
 @main_bp.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
@@ -295,52 +283,3 @@ def delete_tip(tip_id):
 @main_bp.route('/403error')
 def access_error():
     return render_template('403error.html')
-
-#カウンセラーチャット関係の処理
-@main_bp.route('/CounselorChat')
-def counselor():
-    if session['status'] == 'user':
-        return render_template('CounselorChat/user.html')
-    elif session['status'] == 'counselor':
-        return render_template('Counselor/Counselor_dashboard.html')
-    else:
-        return redirect(url_for('main.access_error'))
-
-@main_bp.route('/search', methods=['GET'])
-def search():
-    if 'username' in session:
-        user = User.query.filter_by(username=session['username']).first()
-        if user:
-            counselors = User.query.filter_by(status='counselor').all()
-            return render_template('CounselorChat/search.html', counselors=counselors)
-    return redirect(url_for('CounselorChat'))
-
-@main_bp.route('/select_counselor/<int:counselor_id>', methods=['GET'])
-def select_counselor(counselor_id):
-    if 'username' in session:
-        user = User.query.filter_by(username=session['username']).first()
-        if user:
-            room = CounselorChatRoom.query.filter_by(user_id=user.id, counselor_id=counselor_id).first()
-            if not room:
-                room = CounselorChatRoom(user_id=user.id, counselor_id=counselor_id)
-                db.session.add(room)
-                db.session.commit()
-            return redirect(url_for('chat', room_id=room.id))
-    return redirect(url_for('CounselorChat'))
-
-@main_bp.route('/chat/<int:room_id>', methods=['GET'])
-def chat(room_id):
-    room = CounselorChatRoom.query.get(room_id)
-    if room:
-        messages = CounselorChatMessage.query.filter_by(room_id=room_id).all()
-        return render_template('chat.html', room=room, messages=messages)
-    return redirect(url_for('CounselorChat'))
-
-@main_bp.route('/counselor_chat', methods=['GET'])
-def counselor_chat():
-    if 'username' in session:
-        user = User.query.filter_by(username=session['username']).first()
-        if user:
-            rooms = CounselorChatRoom.query.filter_by(counselor_id=user.id).all()
-            return render_template('CounselorChat/counselor_chat.html', rooms=rooms)
-    return redirect(url_for('CounselorChat'))

@@ -268,26 +268,32 @@ def admin_dashboard():
                         tag = Tag(name=tag_name)
                         db.session.add(tag)
                         db.session.commit()
-            
+
             # ティップの追加
             elif 'tip_title' in request.form and 'tip_content' in request.form:
                 title = request.form['tip_title']
                 content = request.form['tip_content']
                 link = request.form.get('tip_link', '')
-                tag_ids = request.form.getlist('tip_tags')
+                tag_ids = request.form.getlist('tip_tags')  # 複数選択されたタグIDを取得
 
                 if title and content:
                     tip = Tip(title=title, content=content, link=link)
+
+                    # 選択されたタグIDに対応するTagオブジェクトを取得
                     for tag_id in tag_ids:
                         tag = Tag.query.get(int(tag_id))
                         if tag:
                             tip.tags.append(tag)
+                        else:
+                            flash(f"Tag with ID {tag_id} does not exist", "error")
+                    
                     db.session.add(tip)
                     db.session.commit()
 
+            # フィルタリング（任意機能）
             elif 'status' in request.form:
                 status = request.form.get('status')
-        
+
         tags = Tag.query.all()
         tips = Tip.query.all()
         users = User.query.filter_by(status=status).all() if status else User.query.all()

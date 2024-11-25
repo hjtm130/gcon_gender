@@ -43,7 +43,6 @@ class Tag(db.Model):
     # リレーションシップ: 一つのタグは多くのティップに関連
     tips = db.relationship('Tip', secondary='tip_tags', back_populates='tags')
 
-# ティップモデル
 class Tip(db.Model):
     __tablename__ = 'tips'
 
@@ -51,8 +50,14 @@ class Tip(db.Model):
     title = db.Column(db.String(200), nullable=False)
     content = db.Column(db.Text, nullable=False)
     link = db.Column(db.String(200), nullable=True)
-    
-    # リレーションシップ: 一つのティップは多くのタグに関連
+    agenda = db.Column(db.String(500), nullable=True)  # 議題
+    expert_comment = db.Column(db.Text, nullable=True)  # 専門家によるコメント
+
+    # 投票カウント
+    upvotes = db.Column(db.Integer, default=0)
+    downvotes = db.Column(db.Integer, default=0)
+
+    # リレーションシップ
     tags = db.relationship('Tag', secondary='tip_tags', back_populates='tips')
 
 # 中間テーブル: ティップとタグの多対多関係を管理

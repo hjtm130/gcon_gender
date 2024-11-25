@@ -64,7 +64,7 @@ def home():
 
 @main_bp.route('/home')
 def user_dashboard():
-    if session['status'] == 'user':
+    if session['status'] in ['user', 'admin']:
         return render_template('User_dashboard.html')
     else:
         return redirect(url_for('main.access_error'))
@@ -231,51 +231,71 @@ def tip_detail(tip_id):
     tip = Tip.query.get_or_404(tip_id)
     return render_template('tips/tip_detail.html', tip=tip)
 
-@main_bp.route('/Tips/tags', methods=['GET'])
+@main_bp.route('/Tips/tags')
 def tags_list():
-    tips = Tip.query.all()
-    return render_template('Tips/tags_list.html', tips=tips)
+    tags = Tag.query.all()  # データベースからタグを取得
+    return render_template('tips/tags_list.html', tags=tags)  # タグをテンプレートに渡す
 
 @main_bp.route('/Tips/tags/<int:tag_id>', methods=['GET'])
 def tips_by_tag(tag_id):
-    # 指定したタグを取得
     tag = Tag.query.get_or_404(tag_id)
-    # タグに紐づくTipsを取得
+    
+    # タグに関連するtipsを取得
     tips = tag.tips
-    return render_template('Tips/tags_list.html', tag=tag, tips=tips)
+    print(f"Tag: {tag.name}, Number of tips: {len(tips)}")
+    
+    return render_template('tips/tips_by_tag.html', tag=tag, tips=tips)
 
-@main_bp.route('/edit_tip/<int:tip_id>', methods=['POST'])
+
+@main_bp.route('/edit_tip/<int:tip_id>', methods=['GET', 'POST'])
 def edit_tip(tip_id):
+    tip = Tip.query.get_or_404(tip_id)
+    tags = Tag.query.all()  # 全てのタグを取得
+
+    if request.method == 'POST':
+        tip.title = request.form['tip_title']
+        tip.content = request.form['tip_content']
+        tip.agenda = request.form['tip_agenda']
+        tip.expert_comment = request.form['tip_expert_comment']
+        
+        # タグの更新
+        selected_tag_ids = request.form.getlist('tip_tags')
+        tip.tags = []  # 現在のタグをリセット
+        for tag_id in selected_tag_ids:
+            tag = Tag.query.get(tag_id)
+            if tag:
+                tip.tags.append(tag)
+
+        db.session.commit()
+        return redirect(url_for('main.tip_detail', tip_id=tip.id))
+
+    return render_template('edit_tip.html', tip=tip, tags=tags)
+
+@main_bp.route('/reset_votes/<int:tip_id>', methods=['POST'])
+def reset_votes(tip_id):
     if session.get('status') == 'admin':
         tip = Tip.query.get_or_404(tip_id)
-
-        # フォームから送信されたデータを取得
-        title = request.form.get('tip_title')
-        content = request.form.get('tip_content')
-        link = request.form.get('tip_link')
-        tag_ids = request.form.getlist('tip_tags')
-
-        if title and content:
-            # 記事情報の更新
-            tip.title = title
-            tip.content = content
-            tip.link = link
-
-            # タグの更新
-            tip.tags.clear()
-            for tag_id in tag_ids:
-                tag = Tag.query.get(int(tag_id))
-                if tag:
-                    tip.tags.append(tag)
-
-            db.session.commit()
-            flash(f"Tip '{tip.title}' updated successfully!", "success")
-        else:
-            flash("Title and content are required.", "error")
-
+        tip.upvotes = 0
+        tip.downvotes = 0
+        db.session.commit()
+        flash(f"Votes for '{tip.title}' have been reset.", "success")
         return redirect(url_for('main.admin_dashboard'))
     else:
         return redirect(url_for('main.access_error'))
+
+@main_bp.route('/vote/<int:tip_id>/<vote_type>', methods=['POST'])
+def vote(tip_id, vote_type):
+    tip = Tip.query.get_or_404(tip_id)
+    if tip.upvotes is None:
+        tip.upvotes = 0
+    if tip.downvotes is None:
+        tip.downvotes = 0
+    if vote_type == 'up':
+        tip.upvotes += 1
+    elif vote_type == 'down':
+        tip.downvotes += 1
+    db.session.commit()
+    return redirect(url_for('main.tip_detail', tip_id=tip_id))
 
 @main_bp.route('/JuniorHighSchool')
 def junior_high_school():

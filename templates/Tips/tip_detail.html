@@ -8,25 +8,39 @@
     <title>{{ tip.title }}</title>
 </head>
 <body>
-    <h1>{{ tip.title }}</h1>
+    <div class="container">
+        <h1>{{ tip.title }}</h1>
 
-    <p><strong>Content:</strong> {{ tip.content }}</p>
+        <div class="tip-content">
+            <p><strong>Content:</strong> {{ tip.content }}</p>
 
-    {% if tip.link %}
-    <p><strong>More Info:</strong> <a href="{{ tip.link }}" target="_blank">{{ tip.link }}</a></p>
-    {% endif %}
+            <p><strong>Tags:</strong>
+                {% if tip.tags %}
+                    {% for tag in tip.tags %}
+                        <a href="{{ url_for('main.tips_by_tag', tag_id=tag.id) }}" class="badge badge-primary">{{ tag.name }}</a>
+                        {% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No tags available.
+                {% endif %}
+            </p>
 
-    <p><strong>Tags:</strong>
-        {% if tip.tags %}
-            {% for tag in tip.tags %}
-                <a href="{{ url_for('main.tips_by_tag', tag_id=tag.id) }}">{{ tag.name }}</a>
-                {% if not loop.last %}, {% endif %}
-            {% endfor %}
-        {% else %}
-            No tags available.
-        {% endif %}
-    </p>
+            <p><strong>議題:</strong> {{ tip.agenda }}</p>
+            <p><strong>投票結果:</strong> 👍 {{ tip.upvotes }} | 👎 {{ tip.downvotes }}</p>
 
-    <a href="{{ url_for('main.tag_list') }}">Back to Tag List</a>
+            <div class="vote-buttons">
+                <form method="POST" action="{{ url_for('main.vote', tip_id=tip.id, vote_type='up') }}">
+                    <button type="submit" class="btn btn-success">👍 いいね</button>
+                </form>
+                <form method="POST" action="{{ url_for('main.vote', tip_id=tip.id, vote_type='down') }}">
+                    <button type="submit" class="btn btn-danger">👎 よくないね</button>
+                </form>
+            </div>
+
+            <p><strong>専門家コメント:</strong> {{ tip.expert_comment }}</p>
+        </div>
+
+        <a href="{{ url_for('main.tags_list') }}" class="btn btn-primary mt-3">Back to Tag List</a>
+    </div>
 </body>
 </html>

@@ -53,7 +53,8 @@
     <ul>
         {% for tip in tips %}
         <li>
-            <a href="{{ tip.link }}">{{ tip.title }}</a>: {{ tip.content }}
+            <!-- リンクをtip_detailに変更 -->
+            <a href="{{ url_for('main.tip_detail', tip_id=tip.id) }}">{{ tip.title }}</a>: {{ tip.content }}
             <form method="POST" action="{{ url_for('main.delete_tip', tip_id=tip.id) }}" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
@@ -65,10 +66,25 @@
     <ul>
         {% for tip in tips %}
         <li>
-            <a href="{{ tip.link }}">{{ tip.title }}</a>: {{ tip.content }}
+            <strong>{{ tip.title }}</strong>
+            <p>{{ tip.content }}</p>
+            <p>Tags: 
+                {% if tip.tags %}
+                    {% for tag in tip.tags %}
+                        <span>{{ tag.name }}</span>
+                        {% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    No tags available.
+                {% endif %}
+            </p>
+            <p>議題: {{ tip.agenda }}</p>
+            <p>専門家コメント: {{ tip.expert_comment }}</p>
+            <p>投票結果: 👍 {{ tip.upvotes }} | 👎 {{ tip.downvotes }}</p>
+
             <button onclick="document.getElementById('edit-tip-{{ tip.id }}').style.display='block'">Edit</button>
-            <form method="POST" action="{{ url_for('main.delete_tip', tip_id=tip.id) }}" style="display:inline;">
-                <button type="submit">Delete</button>
+            <form method="POST" action="{{ url_for('main.reset_votes', tip_id=tip.id) }}" style="display:inline;">
+                <button type="submit">Reset Votes</button>
             </form>
 
             <!-- 編集フォーム -->
@@ -77,18 +93,21 @@
                     <label for="edit_tip_title_{{ tip.id }}">Title:</label>
                     <input type="text" id="edit_tip_title_{{ tip.id }}" name="tip_title" value="{{ tip.title }}" required>
                     <br>
-                    <label for="edit_tip_content_{{ tip.id }}">Content:</label>
-                    <textarea id="edit_tip_content_{{ tip.id }}" name="tip_content" required>{{ tip.content }}</textarea>
-                    <br>
-                    <label for="edit_tip_link_{{ tip.id }}">Link:</label>
-                    <input type="text" id="edit_tip_link_{{ tip.id }}" name="tip_link" value="{{ tip.link }}">
-                    <br>
-                    <label for="edit_tip_tags_{{ tip.id }}">Tags:</label>
-                    <select id="edit_tip_tags_{{ tip.id }}" name="tip_tags" multiple>
+                    <label for="tip_tags">Tags:</label>
+                    <select id="tip_tags" name="tip_tags" multiple>
                         {% for tag in tags %}
                         <option value="{{ tag.id }}" {% if tag in tip.tags %}selected{% endif %}>{{ tag.name }}</option>
                         {% endfor %}
                     </select>
+                    <br>
+                    <label for="edit_tip_content_{{ tip.id }}">Content:</label>
+                    <textarea id="edit_tip_content_{{ tip.id }}" name="tip_content" required>{{ tip.content }}</textarea>
+                    <br>
+                    <label for="edit_tip_agenda_{{ tip.id }}">Agenda:</label>
+                    <textarea id="edit_tip_agenda_{{ tip.id }}" name="tip_agenda">{{ tip.agenda }}</textarea>
+                    <br>
+                    <label for="edit_tip_expert_comment_{{ tip.id }}">Expert Comment:</label>
+                    <textarea id="edit_tip_expert_comment_{{ tip.id }}" name="tip_expert_comment">{{ tip.expert_comment }}</textarea>
                     <br>
                     <button type="submit">Save Changes</button>
                     <button type="button" onclick="document.getElementById('edit-tip-{{ tip.id }}').style.display='none'">Cancel</button>

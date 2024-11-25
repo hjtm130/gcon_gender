@@ -86,7 +86,7 @@ def aichat_page():
 def create_text():
     message = request.form['message']
 
-     # セッションからユーザー名を取得
+    # セッションからユーザー名を取得
     username = session.get('username')
     if not username:
         return jsonify({'error': 'ユーザーがログインしていません'}), 401
@@ -203,13 +203,22 @@ def get_chat_log():
 
 @main_bp.route('/delete_logs', methods=['POST'])
 def delete_logs():
-    # チャットログを全て削除
-    ChatLog.query.delete()
+    # セッションからユーザー名を取得
+    username = session.get('username')
+    if not username:
+        return jsonify({'error': 'ユーザーがログインしていません'}), 401
+
+    # ユーザーを取得
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'error': 'ユーザー情報が見つかりません'}), 404
+    
+    # ログイン中のユーザーのログのみ削除
+    ChatLog.query.filter_by(user_id=user.id).delete()
     db.session.commit()
     
     # JSONレスポンスを返す
     return jsonify({'message': 'ログが削除されました！'})
-
 #-------------以上---------------
 
 @main_bp.route('/Tips')

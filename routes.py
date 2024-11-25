@@ -85,9 +85,20 @@ def aichat_page():
 @main_bp.route('/create_text', methods=['POST'])
 def create_text():
     message = request.form['message']
+
+     # セッションからユーザー名を取得
+    username = session.get('username')
+    if not username:
+        return jsonify({'error': 'ユーザーがログインしていません'}), 401
+
+    # ユーザーを取得
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({'error': 'ユーザー情報が見つかりません'}), 404
     
-    # 過去のチャットログを取得する
-    past_logs = ChatLog.query.order_by(ChatLog.created_at.desc()).all()
+    # 過去のチャットログを取得
+    past_logs = ChatLog.query.filter_by(user_id=user.id).order_by(ChatLog.created_at.desc()).all()
+
     
     # ログからメッセージをフォーマットする
     messages = []
@@ -115,7 +126,7 @@ def create_text():
     
     # OpenAI APIを使って応答を生成
     res = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4-turbo",
         messages=messages
     )
     
@@ -135,11 +146,16 @@ def create_text():
 
     # 必要に応じて生成されたテキストから深刻度情報を削除
     generated_text = remove_serious_score(generated_text)    
-    
     generated_text = escape(generated_text)
     
     # チャットログをデータベースに保存
-    chat_log = ChatLog(user_message=message, ai_response=generated_text, serious_score="[深刻度]: " + str(serious_score), system_message=system_message)
+    chat_log = ChatLog(
+        user_message=message,
+        ai_response=generated_text,
+        serious_score="[深刻度]: " + str(serious_score),
+        system_message=system_message,
+        user_id=user.id,  # ユーザーIDを保存
+    )
     db.session.add(chat_log)
     db.session.commit()
     
@@ -171,8 +187,18 @@ def chat_logs():
 
 @main_bp.route('/get_chat_log', methods=['GET'])
 def get_chat_log():
-    chat_logs = ChatLog.query.order_by(ChatLog.id.asc()).all()
-    chat_log_list = [{'user_message': chat.user_message, 'ai_response': chat.ai_response, 'serious_score' : chat.serious_score, 'system_message' : chat.system_message} for chat in chat_logs]
+    user_id = session.get('userid')  # セッションからログインユーザーのIDを取得
+    if not user_id:
+        return jsonify({"error": "User not logged in"}), 403
+
+    # ユーザーIDでフィルタリング
+    chat_logs = ChatLog.query.filter_by(user_id=user_id).order_by(ChatLog.id.asc()).all()
+    chat_log_list = [{
+        'user_message': chat.user_message,
+        'ai_response': chat.ai_response,
+        'serious_score': chat.serious_score,
+        'system_message': chat.system_message
+    } for chat in chat_logs]
     return jsonify(chat_log_list)
 
 @main_bp.route('/delete_logs', methods=['POST'])

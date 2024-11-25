@@ -29,6 +29,10 @@ class ChatLog(db.Model):
     serious_score = db.Column(db.String(50), nullable=True)  # 深刻度フィールド
     system_message = db.Column(db.String(500), nullable=True)
 
+    # 新規: Userモデルとのリレーション
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', backref='chat_logs')
+
 # タグモデル
 class Tag(db.Model):
     __tablename__ = 'tags'

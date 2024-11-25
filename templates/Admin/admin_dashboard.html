@@ -61,6 +61,44 @@
         {% endfor %}
     </ul>
 
+    <h2>Edit Tips</h2>
+    <ul>
+        {% for tip in tips %}
+        <li>
+            <a href="{{ tip.link }}">{{ tip.title }}</a>: {{ tip.content }}
+            <button onclick="document.getElementById('edit-tip-{{ tip.id }}').style.display='block'">Edit</button>
+            <form method="POST" action="{{ url_for('main.delete_tip', tip_id=tip.id) }}" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+
+            <!-- 編集フォーム -->
+            <div id="edit-tip-{{ tip.id }}" style="display:none;">
+                <form method="POST" action="{{ url_for('main.edit_tip', tip_id=tip.id) }}">
+                    <label for="edit_tip_title_{{ tip.id }}">Title:</label>
+                    <input type="text" id="edit_tip_title_{{ tip.id }}" name="tip_title" value="{{ tip.title }}" required>
+                    <br>
+                    <label for="edit_tip_content_{{ tip.id }}">Content:</label>
+                    <textarea id="edit_tip_content_{{ tip.id }}" name="tip_content" required>{{ tip.content }}</textarea>
+                    <br>
+                    <label for="edit_tip_link_{{ tip.id }}">Link:</label>
+                    <input type="text" id="edit_tip_link_{{ tip.id }}" name="tip_link" value="{{ tip.link }}">
+                    <br>
+                    <label for="edit_tip_tags_{{ tip.id }}">Tags:</label>
+                    <select id="edit_tip_tags_{{ tip.id }}" name="tip_tags" multiple>
+                        {% for tag in tags %}
+                        <option value="{{ tag.id }}" {% if tag in tip.tags %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <button type="submit">Save Changes</button>
+                    <button type="button" onclick="document.getElementById('edit-tip-{{ tip.id }}').style.display='none'">Cancel</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <h2>User List</h2>
     <form method="POST" action="{{ url_for('main.admin_dashboard') }}">
         <label for="status">Select Status:</label>
         <select name="status" id="status">
@@ -71,8 +109,6 @@
         </select>
         <button type="submit">Filter</button>
     </form>
-
-    <h2>User List</h2>
     <table border="1">
         <thead>
             <tr>

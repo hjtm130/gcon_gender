@@ -244,6 +244,39 @@ def tips_by_tag(tag_id):
     tips = tag.tips
     return render_template('Tips/tags_list.html', tag=tag, tips=tips)
 
+@main_bp.route('/edit_tip/<int:tip_id>', methods=['POST'])
+def edit_tip(tip_id):
+    if session.get('status') == 'admin':
+        tip = Tip.query.get_or_404(tip_id)
+
+        # フォームから送信されたデータを取得
+        title = request.form.get('tip_title')
+        content = request.form.get('tip_content')
+        link = request.form.get('tip_link')
+        tag_ids = request.form.getlist('tip_tags')
+
+        if title and content:
+            # 記事情報の更新
+            tip.title = title
+            tip.content = content
+            tip.link = link
+
+            # タグの更新
+            tip.tags.clear()
+            for tag_id in tag_ids:
+                tag = Tag.query.get(int(tag_id))
+                if tag:
+                    tip.tags.append(tag)
+
+            db.session.commit()
+            flash(f"Tip '{tip.title}' updated successfully!", "success")
+        else:
+            flash("Title and content are required.", "error")
+
+        return redirect(url_for('main.admin_dashboard'))
+    else:
+        return redirect(url_for('main.access_error'))
+
 @main_bp.route('/JuniorHighSchool')
 def junior_high_school():
     return render_template('JuniorHighSchool.html')

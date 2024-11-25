@@ -7,6 +7,7 @@
 <body>
     <h1>{{ tag.name }}のTips</h1>
     <ul>
+        <a href="{{ url_for('main.tip_detail', tip_id=tip.id) }}">{{ tip.title }}</a>: {{ tip.content }}
         {% for tip in tips %}
         <a href="{{ tip.link }}"><li>{{ tip.title }}</a>: {{ tip.content }}</li>
         {% endfor %}

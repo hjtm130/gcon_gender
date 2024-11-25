@@ -221,9 +221,28 @@ def delete_logs():
     return jsonify({'message': 'ログが削除されました！'})
 #-------------以上---------------
 
-@main_bp.route('/Tips')
-def tips():
-    return render_template('Tips.html')
+@main_bp.route('/Tips', methods=['GET'])
+def tips_list():
+    tips = Tip.query.all()
+    return render_template('Tips/tips_list.html', tips=tips)
+
+@main_bp.route('/Tips/<int:tip_id>', methods=['GET'])
+def tip_detail(tip_id):
+    tip = Tip.query.get_or_404(tip_id)
+    return render_template('tips/tip_detail.html', tip=tip)
+
+@main_bp.route('/Tips/tags', methods=['GET'])
+def tags_list():
+    tips = Tip.query.all()
+    return render_template('Tips/tags_list.html', tips=tips)
+
+@main_bp.route('/Tips/tags/<int:tag_id>', methods=['GET'])
+def tips_by_tag(tag_id):
+    # 指定したタグを取得
+    tag = Tag.query.get_or_404(tag_id)
+    # タグに紐づくTipsを取得
+    tips = tag.tips
+    return render_template('Tips/tags_list.html', tag=tag, tips=tips)
 
 @main_bp.route('/JuniorHighSchool')
 def junior_high_school():
@@ -241,17 +260,6 @@ def header_after():
     username = session.get('username')
     status = session.get('status')
     return render_template('after_header.html', username=username, status=status)
-
-@main_bp.route('/tags')
-def tags():
-    tags = Tag.query.all()
-    return render_template('Tips/tags.html', tags=tags)
-
-@main_bp.route('/<tag_id>')
-def tips_by_tag(tag_id):
-    tag = Tag.query.get(tag_id)
-    tips = tag.tips
-    return render_template('Tips/tips_by_tag.html', tag=tag, tips=tips)
 
 # adminログイン後
 @main_bp.route('/admin_dashboard', methods=['GET', 'POST'])

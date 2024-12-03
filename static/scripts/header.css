@@ -7,7 +7,7 @@ nav {
 
 /* ロゴ画像のサイズを小さくする */
 nav .logo img {
-    width: 100px; /* ここで画像の幅を調整 */
+    width: 150px; /* ここで画像の幅を調整 */
     height: auto; 
 }
 
@@ -22,7 +22,7 @@ nav ul {
     justify-content: flex-end;
     display: flex;
     list-style: none;
-    margin: 0;
+    margin: 3px;
     padding: 0;
 }
 
@@ -41,7 +41,7 @@ nav ul li a{
     text-decoration: none;
     width: auto;
     margin: 0 1em;
-    padding: auto;
+    border-bottom: 3px solid #e0f7fa;
 }
 
 nav li a:hover {
